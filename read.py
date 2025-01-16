@@ -28,7 +28,6 @@ class Read:
         if len(set(column_lengths)) != 1:
             raise ValueError(f"All columns must have the same length.")
 
-        self.raw_data = raw_data
         self.nucleotides = ''
         # These scores represent the probability of an error at each position in the read.
         # match to match ?
@@ -46,26 +45,26 @@ class Read:
         # continue extending a gap ?
         self.gcp_qualities = []
 
-        self.fill_nucleotides()
-        self.fill_base_qualities()
-        self.fill_ins_qualities()
-        self.fill_del_qualities()
-        self.fill_gcp_qualities()
+        self.fill_nucleotides(raw_data)
+        self.fill_base_qualities(raw_data)
+        self.fill_ins_qualities(raw_data)
+        self.fill_del_qualities(raw_data)
+        self.fill_gcp_qualities(raw_data)
 
-    def fill_nucleotides(self):
-        self.nucleotides = self.raw_data.split()[0]
+    def fill_nucleotides(self, raw_data):
+        self.nucleotides = raw_data.split()[0]
 
-    def fill_base_qualities(self):
-        self.base_qualities = [self.phred_to_prob(ord(x)-33) for x in self.raw_data.split()[1]]
+    def fill_base_qualities(self, raw_data):
+        self.base_qualities = [self.phred_to_prob(ord(x)-33) for x in raw_data.split()[1]]
 
-    def fill_ins_qualities(self):
-        self.ins_qualities = [self.phred_to_prob(ord(x)-33) for x in self.raw_data.split()[2]]
+    def fill_ins_qualities(self, raw_data):
+        self.ins_qualities = [self.phred_to_prob(ord(x)-33) for x in raw_data.split()[2]]
 
-    def fill_del_qualities(self):
-        self.del_qualities = [self.phred_to_prob(ord(x)-33) for x in self.raw_data.split()[3]]
+    def fill_del_qualities(self, raw_data):
+        self.del_qualities = [self.phred_to_prob(ord(x)-33) for x in raw_data.split()[3]]
 
-    def fill_gcp_qualities(self):
-        self.gcp_qualities = [self.phred_to_prob(ord(x)-33) for x in self.raw_data.split()[4]]
+    def fill_gcp_qualities(self, raw_data):
+        self.gcp_qualities = [self.phred_to_prob(ord(x)-33) for x in raw_data.split()[4]]
 
     @staticmethod
     def phred_to_prob(phred: int) -> float:
